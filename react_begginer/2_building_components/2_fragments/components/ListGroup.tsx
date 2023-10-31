@@ -10,7 +10,7 @@ function ListGroup() {
     // 1- Wrap everything into a div, But we are adding one extra element in the DOM.
     // 2- Better is to use a fragment, when this component gets rendered on the screen we wont have
     //    an additional element like a div.
-    //* We can replace Fragment with <>, if we do this theres no need of importing Fragment component.
+    //* We can replace Fragment with <>, if we do this theres no need of importing Fragment component
     <Fragment>
       <h1>List</h1>
       <ul className="list-group">
