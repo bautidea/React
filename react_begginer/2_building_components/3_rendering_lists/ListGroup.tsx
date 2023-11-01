@@ -15,8 +15,8 @@ function ListGroup() {
       we can only use HTML elements or other React components.
         //* When rendering a list of items using the map method, we should get each item a unique key.
     */}
-        {items.map((item) => (
-          <li key={item}>{item}</li>
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
         ))}
       </ul>
     </>
