@@ -1,5 +1,3 @@
-import { Fragment } from 'react';
-
 function ListGroup() {
   // To render a list dynamically, first we create an array.
   const items = ['New York', 'San Francisco', 'Tokyo', 'London', 'Paris'];
