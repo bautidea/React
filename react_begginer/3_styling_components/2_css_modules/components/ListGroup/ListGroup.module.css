@@ -1,0 +1,25 @@
+/* 
+  There is a problem when using Vanilla CSS, if somewhere else we have another spreadsheet where
+  we have a css class with the same name, we're going to run into clashes, and we can overwrite 
+  the properties.
+
+  * This is what CSS modules try to solve.
+  A CSS module is a CSS file in which all class names are scoped locally like a JS module, so they
+  allow us to use the same CSS name in different files without worrying about name clashes.
+
+  * To use them we need to first name file with extension '-name_file-.module.css', and in the TS or JS
+  * file where we are importing them we should use the following import statement 
+  * --> import styles from -name_file-.module.css
+
+  All the classes defined in that file is going to be a property on the 'styles' object.
+
+  Since we cannot use hyphen notation we can change to use camel notation.
+*/
+.listGroup {
+  list-style: none;
+  padding: 0;
+}
+
+.container {
+  background: yellow;
+}
