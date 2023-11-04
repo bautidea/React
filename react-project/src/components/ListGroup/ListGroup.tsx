@@ -1,4 +1,6 @@
 import { useState } from 'react';
+// Importing the CSS file
+import './ListGroup.css';
 
 interface Props {
   items: string[];
@@ -11,18 +13,16 @@ function ListGroup({ items, heading, onSelectItem }: Props) {
 
   return (
     <>
-      {/*  
-        We can also use inline styles for styling our components, but they are not recommended because they make
-        the code hard to read and maintain, they should be used in special cases.
-
-        All the CSS attributes are named different, instead of using hyphen notation, the attributes are named
-        using camel notation.
-      */}
       <h1>{heading}</h1>
       {items.length === 0 && <p>No items found </p>}
-      <ul style={{ backgroundColor: 'yellow' }}>
+      <ul className="list-group">
         {items.map((item, index) => (
           <li
+            className={
+              selectedIndex === index
+                ? 'list-group-item active'
+                : 'list-group-item'
+            }
             key={item}
             onClick={() => {
               setSelectedIndex(index);
