@@ -5,6 +5,8 @@ function App() {
   const [status, setStatus] = useState('inactive');
 
   const changeStatus = () => {
+    console.log('Heart Clicked');
+
     if (status === 'active') setStatus('inactive');
     else setStatus('active');
   };
