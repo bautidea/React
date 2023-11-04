@@ -1,0 +1,16 @@
+.like {
+  font-size: 50px;
+  transition: color 0.5s;
+}
+
+.like-active {
+  color: rgb(202, 66, 88);
+}
+
+.like-inactive {
+  color: gray;
+}
+
+.like:hover {
+  cursor: pointer;
+}
