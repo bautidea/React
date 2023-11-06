@@ -28,7 +28,6 @@ function App() {
     <div>
       {
         <p>
-          {' '}
           {games.id} {games.player.name}
         </p>
       }
