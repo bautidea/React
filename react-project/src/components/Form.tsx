@@ -1,19 +1,38 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useRef } from 'react';
 
 const Form = () => {
-  // To handle form submission we go to our form element and handle the 'onSubmit' event the same way
-  // we handle the 'onClick' event of buttons.
+  // In React we have another built in hook called 'useRef', we can use it to reference a DOM element.
+  // We are going to see how we can use this hook to reference an input field and read its value
+  // when the form is submitted.
 
-  // By default when we submit an HTML form, that form is posted to the server, so we get a full page
-  // reload, to solve this problem, we need to prevent this default behavior.
-  // We do this by giving the function a parameter, like event, we will get a compilation error because
-  // the TS compiler doesnt know the type of event parameter, so we need to annotate this with the type.
+  // We give this function an initial value, the common practice is to pass null.
+  // This hook will return a reference object.
+  // We can use the ref hook to reference any kind of element in the DOM, buttons, heading, list, so on,
+  // so we need to tell the TS compiler that we are referencing an HTML input element.
+  const nameRef = useRef<HTMLInputElement>(null);
+  const ageRef = useRef<HTMLInputElement>(null);
+  // Then we need to associate the reference object with the corresponding input.
+
+  // Creating object to pass to server
+  const person = { name: '', age: 0 };
+
   const handleSubmit = (event: FormEvent) => {
-    // The first thing to do is call 'preventDefault()' on event, so we can prevent this form from being posted
-    // to the server.
     event.preventDefault();
-    // And then we can do what we want.
-    console.log('Submitted');
+    // The reference object has a single property '.current' this will return the DOM element we are referencing.
+    // --> <input ref={nameRef} id="name" type="text" className="form-control" />.
+    console.log(nameRef.current);
+
+    // We know that all in HTML all input fields have a value property. We need to do a null check because TS compiler
+    // is complaining that 'nameRef.current' is possibly null.
+    if (nameRef.current !== null) console.log(nameRef.current.value);
+    if (ageRef.current !== null) console.log(ageRef.current.value);
+
+    // When submitting a form we need to send an object to the serer to be saved, so instead of logging individual values
+    if (nameRef.current !== null) person.name = nameRef.current.value;
+    // Since '.current.value' returns a string we need to parse the value to an int, because age is a number.
+    if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
+
+    console.log(person);
   };
 
   return (
@@ -22,14 +41,15 @@ const Form = () => {
         <label htmlFor="name" className="form-label">
           Name
         </label>
-        <input id="name" type="text" className="form-control" />
+        {/* Referencing the reference object */}
+        <input ref={nameRef} id="name" type="text" className="form-control" />
       </div>
 
       <div className="mb-3">
         <label htmlFor="age" className="form-label">
           Age
         </label>
-        <input id="age" type="number" className="form-control" />
+        <input ref={ageRef} id="age" type="number" className="form-control" />
       </div>
 
       <button className="btn btn-primary" type="submit">
