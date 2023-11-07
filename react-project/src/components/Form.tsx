@@ -1,47 +1,35 @@
 import React, { FormEvent, useRef, useState } from 'react';
+import { FieldValues, useForm } from 'react-hook-form';
 
 const Form = () => {
-  // There is another way to get the value of input fields in a form, instead of the ref hook
-  // we can use the state hook.
-  //* With this approach, every time the use types or remove a character, because we are updating
-  //* the state, our component is rerendered.
-  // We define a person object and a function to update it.
-  const [person, setPerson] = useState({
-    name: '',
-    age: 0,
-  });
+  // We can use a library to quickly build forms with less code --> npm i react-hook-form
+  // Using react-hook-form to get a form object, in this object we have a bunch of methods and
+  // properties for programmatically controlling our forms.
+  // Here we are using destructuring to get the register function and handleSubmit t handle form
+  // submission.
+  const { register, handleSubmit } = useForm();
+  // React-hook-form uses reference objects to get values from input fields, there is no rerendering
+  // involved here.
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-
-    console.log(person);
+  const onSubmit = (data: FieldValues) => {
+    console.log(data);
   };
-
   return (
-    <form onSubmit={handleSubmit}>
+    // To handle form submission we call the submit handler, and as argument, we give it a submit handler,
+    // a submit handler is a function that receives data in this form.
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-3">
         <label htmlFor="name" className="form-label">
           Name
         </label>
         {/* 
-          All input fields have a change event that is triggered every time the user types a keystroke,
-          we can handle this event and update our state variables.
-          In the onChange function we update the name property of the person object, to get the current
-          value of the input field we give this function a parameter called event.
-
-          All input fields in HTML have a value property for maintaining their own state, but here we have 
-          a state variable ('person'), so its possible that these sources get out of sync.
-          To solve this problem, we should make react the single source of true by setting 'value={person.name}'.
-
-          We refer to these inputs as 'Controlled Component' because its state is entirely controlled by react,
-          the value of the input field is not managed by the DOM, but instead is stored and updated in the 
-          component state.
+          Instead of setting the onChange and value attributes, we are going to dynamically call 
+          the register function , and give it a key.
+          Since this function returns an object we spread it so all the properties from register
+          get added to this input.
         */}
         <input
-          onChange={(event) =>
-            setPerson({ ...person, name: event.target.value })
-          }
-          value={person.name}
+          {...register('name')}
           id="name"
           type="text"
           className="form-control"
@@ -53,10 +41,7 @@ const Form = () => {
           Age
         </label>
         <input
-          onChange={(event) =>
-            setPerson({ ...person, age: parseInt(event.target.value) })
-          }
-          value={person.age}
+          {...register('age')}
           id="age"
           type="number"
           className="form-control"
