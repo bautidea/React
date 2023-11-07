@@ -1,36 +1,18 @@
-import React, { FormEvent, useRef } from 'react';
+import React, { FormEvent, useRef, useState } from 'react';
 
 const Form = () => {
-  // In React we have another built in hook called 'useRef', we can use it to reference a DOM element.
-  // We are going to see how we can use this hook to reference an input field and read its value
-  // when the form is submitted.
-
-  // We give this function an initial value, the common practice is to pass null.
-  // This hook will return a reference object.
-  // We can use the ref hook to reference any kind of element in the DOM, buttons, heading, list, so on,
-  // so we need to tell the TS compiler that we are referencing an HTML input element.
-  const nameRef = useRef<HTMLInputElement>(null);
-  const ageRef = useRef<HTMLInputElement>(null);
-  // Then we need to associate the reference object with the corresponding input.
-
-  // Creating object to pass to server
-  const person = { name: '', age: 0 };
+  // There is another way to get the value of input fields in a form, instead of the ref hook
+  // we can use the state hook.
+  //* With this approach, every time the use types or remove a character, because we are updating
+  //* the state, our component is rerendered.
+  // We define a person object and a function to update it.
+  const [person, setPerson] = useState({
+    name: '',
+    age: 0,
+  });
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    // The reference object has a single property '.current' this will return the DOM element we are referencing.
-    // --> <input ref={nameRef} id="name" type="text" className="form-control" />.
-    console.log(nameRef.current);
-
-    // We know that all in HTML all input fields have a value property. We need to do a null check because TS compiler
-    // is complaining that 'nameRef.current' is possibly null.
-    if (nameRef.current !== null) console.log(nameRef.current.value);
-    if (ageRef.current !== null) console.log(ageRef.current.value);
-
-    // When submitting a form we need to send an object to the serer to be saved, so instead of logging individual values
-    if (nameRef.current !== null) person.name = nameRef.current.value;
-    // Since '.current.value' returns a string we need to parse the value to an int, because age is a number.
-    if (ageRef.current !== null) person.age = parseInt(ageRef.current.value);
 
     console.log(person);
   };
@@ -41,15 +23,44 @@ const Form = () => {
         <label htmlFor="name" className="form-label">
           Name
         </label>
-        {/* Referencing the reference object */}
-        <input ref={nameRef} id="name" type="text" className="form-control" />
+        {/* 
+          All input fields have a change event that is triggered every time the user types a keystroke,
+          we can handle this event and update our state variables.
+          In the onChange function we update the name property of the person object, to get the current
+          value of the input field we give this function a parameter called event.
+
+          All input fields in HTML have a value property for maintaining their own state, but here we have 
+          a state variable ('person'), so its possible that these sources get out of sync.
+          To solve this problem, we should make react the single source of true by setting 'value={person.name}'.
+
+          We refer to these inputs as 'Controlled Component' because its state is entirely controlled by react,
+          the value of the input field is not managed by the DOM, but instead is stored and updated in the 
+          component state.
+        */}
+        <input
+          onChange={(event) =>
+            setPerson({ ...person, name: event.target.value })
+          }
+          value={person.name}
+          id="name"
+          type="text"
+          className="form-control"
+        />
       </div>
 
       <div className="mb-3">
         <label htmlFor="age" className="form-label">
           Age
         </label>
-        <input ref={ageRef} id="age" type="number" className="form-control" />
+        <input
+          onChange={(event) =>
+            setPerson({ ...person, age: parseInt(event.target.value) })
+          }
+          value={person.age}
+          id="age"
+          type="number"
+          className="form-control"
+        />
       </div>
 
       <button className="btn btn-primary" type="submit">
