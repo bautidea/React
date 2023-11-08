@@ -3,19 +3,6 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-// As our form gets more complex we will end up with a lot of validation rules
-// in that case its better to use a technique called schema based validation.
-// There are various libraries that allow us to define all our validation rules
-// in a single place, which we call a schema, we have:
-// - Joi
-// - Yup
-// - Zod --> We are going to see basics. --> npm i @zod
-
-// Using z we can define the shape or schema of our form and all validation rules,
-// calling .object() and passing as argument an object with properties that represent
-// our form fields.
-// This is a configuration object that represents the shape of the form.
-// We can pass an object with a message property
 const schema = z.object({
   name: z.string().min(3, { message: 'Name must be at least 3 characters.' }),
   age: z
@@ -23,20 +10,17 @@ const schema = z.object({
     .min(18, { message: 'Age must be at least 18.' }),
 });
 
-// In zod we have a method that allow us to extract the type from a schema object, so we
-// dont have to type the interface again.
-// This will return a TS type.
 type FormData = z.infer<typeof schema>;
 
 const Form = () => {
-  // To integrate react-hook-forms with zod we install --> npm i @hookform/resolvers
-  // it includes resolvers for various data validation libraries.
-  // And when calling the form hook we pass the configuration object, by calling the imported function
-  // and we pass the schema object
+  // Now we are going to disable the submit button if the form is invalid
+  // We are going to use the property 'isValid' from 'formState' object,
+  // we can use it to tell if the form is valid or not.
+  // And when setting the button we can set the disable attribute.
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormData>({ resolver: zodResolver(schema) }); //* --> Passing the interface
 
   const onSubmit = (data: FieldValues) => {
@@ -55,13 +39,6 @@ const Form = () => {
           type="text"
           className="form-control"
         />
-        {/*  
-          With this technique we dont need a second <p> for error messages.
-          We want to check for the existence of the property called name in the 
-          errors object.
-          We render dynamically the error msg, zod will generate error messages based 
-          on the schema we defined at the beginning.
-        */}
         {errors.name && <p className="text-danger">{errors.name.message}</p>}
       </div>
 
@@ -78,7 +55,7 @@ const Form = () => {
         {errors.age && <p className="text-danger">{errors.age.message}</p>}
       </div>
 
-      <button className="btn btn-primary" type="submit">
+      <button disabled={!isValid} className="btn btn-primary" type="submit">
         Submit
       </button>
     </form>
