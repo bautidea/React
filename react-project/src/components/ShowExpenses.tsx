@@ -1,14 +1,21 @@
 import React from 'react';
 
-const ShowExpenses = () => {
+interface Props {
+  categories: string[];
+}
+
+const ShowExpenses = ({ categories }: Props) => {
   return (
     <form>
       <div className="mb-3">
-        <select id="category" className="form-select">
-          <option selected>All categories</option>
-          <option value="1">Groceries</option>
-          <option value="2">Utilities</option>
-          <option value="3">Entertainment</option>
+        <select id="category" className="form-select" defaultValue={'default'}>
+          <option value="default">All categories</option>
+
+          {categories.map((item, ind) => (
+            <option key={ind} value={ind}>
+              {item}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -18,7 +25,7 @@ const ShowExpenses = () => {
             <th scope="col">Description</th>
             <th scope="col">Amount</th>
             <th scope="col">Category</th>
-            <th scope="col"> </th>
+            <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -26,6 +33,9 @@ const ShowExpenses = () => {
             <td>Milk</td>
             <td>5</td>
             <td>Groceries</td>
+            <td>
+              <button className="btn btn-primary">Click ME</button>
+            </td>
           </tr>
         </tbody>
       </table>

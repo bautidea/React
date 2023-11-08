@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
+import { FieldValues, useForm } from 'react-hook-form';
 
-const AddExpenseForm = () => {
+interface Props {
+  categories: string[];
+  onSubmit: (data: FieldValues) => void;
+}
+
+const AddExpenseForm = ({ categories, onSubmit }: Props) => {
+  // Using react-hook-form to handle form submissions
+  const { register, handleSubmit } = useForm();
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-3">
         <label htmlFor="description" className="form-label">
-          Descriprion
+          Description
         </label>
 
-        <input id="description" className="form-control" type="text" />
+        <input
+          {...register('description')}
+          id="description"
+          className="form-control"
+          type="text"
+        />
       </div>
 
       <div className="mb-3">
@@ -16,7 +30,12 @@ const AddExpenseForm = () => {
           Amount
         </label>
 
-        <input id="amount" className="form-control" type="text" />
+        <input
+          {...register('amount')}
+          id="amount"
+          className="form-control"
+          type="text"
+        />
       </div>
 
       <div className="mb-3">
@@ -24,11 +43,19 @@ const AddExpenseForm = () => {
           Category
         </label>
 
-        <select id="category" className="form-select">
-          <option selected></option>
-          <option value="1">Groceries</option>
-          <option value="2">Utilities</option>
-          <option value="3">Entertainment</option>
+        <select
+          {...register('category')}
+          id="category"
+          className="form-select"
+          defaultValue={'default'}
+        >
+          <option value="default" disabled></option>
+
+          {categories.map((item, ind) => (
+            <option key={ind} value={item}>
+              {item}
+            </option>
+          ))}
         </select>
       </div>
 
