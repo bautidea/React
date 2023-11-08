@@ -1,9 +1,9 @@
-import Form from './components/Form';
+import AddExpenseForm from './components/AddExpenseForm';
 
 function App() {
   return (
     <div>
-      <Form></Form>
+      <AddExpenseForm></AddExpenseForm>
     </div>
   );
 }
