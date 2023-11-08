@@ -32,7 +32,7 @@ const AddExpenseForm = () => {
         </select>
       </div>
 
-      <button type="submit" className="btn btn-primary mb-3">
+      <button type="submit" className="btn btn-primary mb-5">
         Submit
       </button>
     </form>
