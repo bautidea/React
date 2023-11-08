@@ -1,22 +1,43 @@
 import React, { FormEvent, useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-interface FormData {
-  name: string;
-  age: number;
-}
+// As our form gets more complex we will end up with a lot of validation rules
+// in that case its better to use a technique called schema based validation.
+// There are various libraries that allow us to define all our validation rules
+// in a single place, which we call a schema, we have:
+// - Joi
+// - Yup
+// - Zod --> We are going to see basics. --> npm i @zod
+
+// Using z we can define the shape or schema of our form and all validation rules,
+// calling .object() and passing as argument an object with properties that represent
+// our form fields.
+// This is a configuration object that represents the shape of the form.
+// We can pass an object with a message property
+const schema = z.object({
+  name: z.string().min(3, { message: 'Name must be at least 3 characters.' }),
+  age: z
+    .number({ invalid_type_error: 'Age field is required.' })
+    .min(18, { message: 'Age must be at least 18.' }),
+});
+
+// In zod we have a method that allow us to extract the type from a schema object, so we
+// dont have to type the interface again.
+// This will return a TS type.
+type FormData = z.infer<typeof schema>;
 
 const Form = () => {
-  // Let see how we can apply validation rules.
-  // We add the property 'formState' to handle error of validation, we can use this object
-  // to show validation msgs to the user.
-  // We need to access the .error object, because probably the error object is going to be
-  // repeated many times, its better to destructure 'formState'.
+  // To integrate react-hook-forms with zod we install --> npm i @hookform/resolvers
+  // it includes resolvers for various data validation libraries.
+  // And when calling the form hook we pass the configuration object, by calling the imported function
+  // and we pass the schema object
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>(); //* --> Passing the interface
+  } = useForm<FormData>({ resolver: zodResolver(schema) }); //* --> Passing the interface
 
   const onSubmit = (data: FieldValues) => {
     console.log(data);
@@ -29,30 +50,19 @@ const Form = () => {
           Name
         </label>
         <input
-          // Here as a second argument of the register method we can pass an object, and
-          // in it we can add the standard HTML attributes for data validations.
-          //* React-hook-form only calls our handles function is the form is valid,
-          // so we can show an error msg to the user.
-          {...(register('name'), { required: true, minLength: 3 })}
+          {...register('name')}
           id="name"
           type="text"
           className="form-control"
         />
-        {/* 
-          Displaying error, we are using optional chaining because our errors object can be empty 
-          This expression is only evaluated if we have a name property.
-
-          The TS Compiler is not aware of the input fields so we dont get autocompletion for errors 
-          object. To improve this we can use an interface to define the shape of this form.
+        {/*  
+          With this technique we dont need a second <p> for error messages.
+          We want to check for the existence of the property called name in the 
+          errors object.
+          We render dynamically the error msg, zod will generate error messages based 
+          on the schema we defined at the beginning.
         */}
-        {errors.name?.type === 'required' && (
-          <p className="text-danger">The name field is required.</p>
-        )}
-        {errors.name?.type === 'minLength' && (
-          <p className="text-danger">
-            The name must be at least three characters.
-          </p>
-        )}
+        {errors.name && <p className="text-danger">{errors.name.message}</p>}
       </div>
 
       <div className="mb-3">
@@ -60,11 +70,12 @@ const Form = () => {
           Age
         </label>
         <input
-          {...register('age')}
+          {...register('age', { valueAsNumber: true })}
           id="age"
           type="number"
           className="form-control"
         />
+        {errors.age && <p className="text-danger">{errors.age.message}</p>}
       </div>
 
       <button className="btn btn-primary" type="submit">
