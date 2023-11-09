@@ -1,10 +1,18 @@
 import React from 'react';
 
-interface Props {
-  categories: string[];
+interface Expenses {
+  id: number;
+  description: string;
+  amount: number;
+  category: string;
 }
 
-const ShowExpenses = ({ categories }: Props) => {
+interface Props {
+  categories: string[];
+  loadedExpenses: Expenses[];
+}
+
+const ShowExpenses = ({ categories, loadedExpenses }: Props) => {
   return (
     <form>
       <div className="mb-3">
@@ -29,14 +37,19 @@ const ShowExpenses = ({ categories }: Props) => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Milk</td>
-            <td>5</td>
-            <td>Groceries</td>
-            <td>
-              <button className="btn btn-primary">Click ME</button>
-            </td>
-          </tr>
+          {loadedExpenses.map((expense) => {
+            return (
+              <tr key={expense.id}>
+                <td scope="col">{expense.description}</td>
+                <td scope="col">{expense.amount}</td>
+                <td scope="col">{expense.category}</td>
+                <td>
+                  {' '}
+                  <button className="btn btn-outline-danger">Delete</button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </form>
