@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, { ChangeEvent, FormEvent, useRef } from 'react';
+import { FieldValues } from 'react-hook-form';
 interface Expenses {
   id: number;
   description: string;
@@ -10,23 +10,41 @@ interface Expenses {
 interface Props {
   categories: string[];
   loadedExpenses: Expenses[];
+  selectedCategory: string;
+  onDelete: (data: number) => void;
+  onSelected: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const ShowExpenses = ({ categories, loadedExpenses }: Props) => {
-  return (
-    <form>
-      <div className="mb-3">
-        <select id="category" className="form-select" defaultValue={'default'}>
-          <option value="default">All categories</option>
+const ShowExpenses = ({
+  categories,
+  loadedExpenses,
+  selectedCategory,
+  onDelete,
+  onSelected,
+}: Props) => {
+  const categoriesToShow =
+    selectedCategory !== 'all'
+      ? loadedExpenses.filter(
+          (expense) => expense.category === selectedCategory
+        )
+      : loadedExpenses;
 
+  return (
+    <div>
+      <div className="mb-3">
+        <select
+          className="form-select"
+          onChange={onSelected}
+          value={selectedCategory}
+        >
+          <option value="all">All categories</option>
           {categories.map((item, ind) => (
-            <option key={ind} value={ind}>
+            <option key={ind} value={item}>
               {item}
             </option>
           ))}
         </select>
       </div>
-
       <table className="table table-bordered table-hover">
         <thead>
           <tr>
@@ -37,22 +55,26 @@ const ShowExpenses = ({ categories, loadedExpenses }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {loadedExpenses.map((expense) => {
+          {categoriesToShow.map((expense) => {
             return (
               <tr key={expense.id}>
                 <td scope="col">{expense.description}</td>
                 <td scope="col">{expense.amount}</td>
                 <td scope="col">{expense.category}</td>
                 <td>
-                  {' '}
-                  <button className="btn btn-outline-danger">Delete</button>
+                  <button
+                    className="btn btn-outline-danger"
+                    onClick={() => onDelete(expense.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
-    </form>
+    </div>
   );
 };
 

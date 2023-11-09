@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import AddExpenseForm from './components/AddExpenseForm';
 import ShowExpenses from './components/ShowExpenses';
 import { FieldValues, UseFormReset } from 'react-hook-form';
@@ -16,6 +16,7 @@ function App() {
 
   const [expenses, setExpenses] = useState<Expenses[]>([]);
   const [expenseId, setExpenseId] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   const onSubmit = (data: FieldValues) => {
     const newExpense = {
@@ -29,6 +30,14 @@ function App() {
     setExpenseId(expenseId + 1);
   };
 
+  const onDelete = (id: number) => {
+    setExpenses(expenses.filter((expense) => expense.id !== id));
+  };
+
+  const filterCategory = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(event.target.value);
+  };
+
   return (
     <div>
       <AddExpenseForm
@@ -38,6 +47,9 @@ function App() {
       <ShowExpenses
         categories={categories}
         loadedExpenses={expenses}
+        selectedCategory={selectedCategory}
+        onDelete={onDelete}
+        onSelected={filterCategory}
       ></ShowExpenses>
     </div>
   );
