@@ -1,6 +1,6 @@
 import AddExpenseForm from './components/AddExpenseForm';
 import ShowExpenses from './components/ShowExpenses';
-import { FieldValues } from 'react-hook-form';
+import { FieldValues, UseFormReset } from 'react-hook-form';
 
 function App() {
   // Defining all possible categories
