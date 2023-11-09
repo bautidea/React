@@ -12,7 +12,7 @@ interface Props {
   loadedExpenses: Expenses[];
   selectedCategory: string;
   onDelete: (data: number) => void;
-  onSelected: (event: ChangeEvent<HTMLSelectElement>) => void;
+  onSelect: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const ShowExpenses = ({
@@ -20,7 +20,7 @@ const ShowExpenses = ({
   loadedExpenses,
   selectedCategory,
   onDelete,
-  onSelected,
+  onSelect,
 }: Props) => {
   const categoriesToShow =
     selectedCategory !== 'all'
@@ -34,7 +34,7 @@ const ShowExpenses = ({
       <div className="mb-3">
         <select
           className="form-select"
-          onChange={onSelected}
+          onChange={onSelect}
           value={selectedCategory}
         >
           <option value="all">All categories</option>

@@ -49,7 +49,7 @@ function App() {
         loadedExpenses={expenses}
         selectedCategory={selectedCategory}
         onDelete={onDelete}
-        onSelected={filterCategory}
+        onSelect={filterCategory}
       ></ShowExpenses>
     </div>
   );
