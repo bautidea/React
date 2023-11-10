@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent, useRef } from 'react';
 import { FieldValues } from 'react-hook-form';
-import { categories } from '../App';
+import categories from '../categories';
 interface Expenses {
   id: number;
   description: string;

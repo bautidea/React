@@ -10,9 +10,6 @@ interface Expenses {
   category: string;
 }
 
-// Defining all possible categories
-export const categories = ['Groceries', 'Utilities', 'Entertainment'] as const;
-
 function App() {
   const [expenses, setExpenses] = useState<Expenses[]>([]);
   const [expenseId, setExpenseId] = useState(0);

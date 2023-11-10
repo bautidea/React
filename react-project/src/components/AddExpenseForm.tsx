@@ -1,10 +1,7 @@
 import { FieldValues, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { categories } from '../App';
-interface Props {
-  onSubmit: (data: FieldValues) => void;
-}
+import categories from '../categories';
 
 const schema = z.object({
   description: z
@@ -20,10 +17,16 @@ const schema = z.object({
   // and nothing else, for that reason the type is going to be enum, this type can be one of many values.
   // For categories to be used as a type it needs to be a constant, their values shouldnt vary, thats why
   // in App module im declaring this variable as constant (const array = [] as const)
-  category: z.enum(categories),
+  category: z.enum(categories, {
+    errorMap: () => ({ message: 'Category is required' }),
+  }),
 });
 
 type FormData = z.infer<typeof schema>;
+
+interface Props {
+  onSubmit: (data: FieldValues) => void;
+}
 
 const AddExpenseForm = ({ onSubmit }: Props) => {
   // Using react-hook-form to handle form submissions
