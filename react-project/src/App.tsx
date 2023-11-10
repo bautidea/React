@@ -38,6 +38,13 @@ function App() {
     setSelectedCategory(event.target.value);
   };
 
+  // Im not using a state variable because we can obtain the filtered expenses from an
+  // existing state variable.
+  const expensesToShow =
+    selectedCategory !== 'all'
+      ? expenses.filter((expense) => expense.category === selectedCategory)
+      : expenses;
+
   return (
     <div>
       <AddExpenseForm
@@ -46,7 +53,7 @@ function App() {
       ></AddExpenseForm>
       <ShowExpenses
         categories={categories}
-        loadedExpenses={expenses}
+        expenses={expensesToShow}
         selectedCategory={selectedCategory}
         onDelete={onDelete}
         onSelect={filterCategory}

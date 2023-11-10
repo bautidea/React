@@ -9,72 +9,81 @@ interface Expenses {
 
 interface Props {
   categories: string[];
-  loadedExpenses: Expenses[];
+  expenses: Expenses[];
   selectedCategory: string;
-  onDelete: (data: number) => void;
+  onDelete: (id: number) => void;
   onSelect: (event: ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const ShowExpenses = ({
   categories,
-  loadedExpenses,
+  expenses,
   selectedCategory,
   onDelete,
   onSelect,
 }: Props) => {
-  const categoriesToShow =
-    selectedCategory !== 'all'
-      ? loadedExpenses.filter(
-          (expense) => expense.category === selectedCategory
-        )
-      : loadedExpenses;
+  const totalExpenses = expenses.reduce((accumulator, expense) => {
+    return accumulator + expense.amount;
+  }, 0);
 
   return (
-    <div>
-      <div className="mb-3">
-        <select
-          className="form-select"
-          onChange={onSelect}
-          value={selectedCategory}
-        >
-          <option value="all">All categories</option>
-          {categories.map((item, ind) => (
-            <option key={ind} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-      </div>
-      <table className="table table-bordered table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Description</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Category</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {categoriesToShow.map((expense) => {
-            return (
-              <tr key={expense.id}>
-                <td scope="col">{expense.description}</td>
-                <td scope="col">{expense.amount}</td>
-                <td scope="col">{expense.category}</td>
-                <td>
-                  <button
-                    className="btn btn-outline-danger"
-                    onClick={() => onDelete(expense.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+    <>
+      <div>
+        <div className="mb-3">
+          <select
+            className="form-select"
+            onChange={onSelect}
+            value={selectedCategory}
+          >
+            <option value="all">All categories</option>
+            {categories.map((item, ind) => (
+              <option key={ind} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* If there are no expenses to show */}
+        {expenses.length === 0 ? null : (
+          <table className="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Category</th>
+                <th scope="col"></th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+            </thead>
+            <tbody>
+              {expenses.map((expense) => {
+                return (
+                  <tr key={expense.id}>
+                    <td scope="col">{expense.description}</td>
+                    <td scope="col">${expense.amount.toFixed(2)}</td>
+                    <td scope="col">{expense.category}</td>
+                    <td>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => onDelete(expense.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td scope="col">Total</td>
+                <td scope="col">${totalExpenses.toFixed(2)}</td>
+              </tr>
+            </tfoot>
+          </table>
+        )}
+      </div>
+    </>
   );
 };
 
