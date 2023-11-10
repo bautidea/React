@@ -10,10 +10,10 @@ interface Expenses {
   category: string;
 }
 
-function App() {
-  // Defining all possible categories
-  const categories = ['Groceries', 'Utilities', 'Entertainment'];
+// Defining all possible categories
+export const categories = ['Groceries', 'Utilities', 'Entertainment'];
 
+function App() {
   const [expenses, setExpenses] = useState<Expenses[]>([]);
   const [expenseId, setExpenseId] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -47,12 +47,8 @@ function App() {
 
   return (
     <div>
-      <AddExpenseForm
-        categories={categories}
-        onSubmit={onSubmit}
-      ></AddExpenseForm>
+      <AddExpenseForm onSubmit={onSubmit}></AddExpenseForm>
       <ShowExpenses
-        categories={categories}
         expenses={expensesToShow}
         selectedCategory={selectedCategory}
         onDelete={onDelete}

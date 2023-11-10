@@ -1,8 +1,8 @@
 import { FieldValues, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { categories } from '../App';
 interface Props {
-  categories: string[];
   onSubmit: (data: FieldValues) => void;
 }
 
@@ -19,7 +19,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const AddExpenseForm = ({ categories, onSubmit }: Props) => {
+const AddExpenseForm = ({ onSubmit }: Props) => {
   // Using react-hook-form to handle form submissions
   const {
     register,

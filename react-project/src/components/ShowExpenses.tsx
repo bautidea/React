@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FormEvent, useRef } from 'react';
 import { FieldValues } from 'react-hook-form';
+import { categories } from '../App';
 interface Expenses {
   id: number;
   description: string;
@@ -8,7 +9,6 @@ interface Expenses {
 }
 
 interface Props {
-  categories: string[];
   expenses: Expenses[];
   selectedCategory: string;
   onDelete: (id: number) => void;
@@ -16,7 +16,6 @@ interface Props {
 }
 
 const ShowExpenses = ({
-  categories,
   expenses,
   selectedCategory,
   onDelete,
