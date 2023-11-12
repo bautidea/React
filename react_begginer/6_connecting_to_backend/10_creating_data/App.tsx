@@ -62,7 +62,7 @@ function App() {
 
     // Calling server to save the changes, and passing the new user object.
     axios
-      .post('https://jsonplaceholder.typicode.com/users/' + newUser)
+      .post('https://jsonplaceholder.typicode.com/users', newUser)
       // If the call is successful we should refresh the list with the saved user
       // because the new user has an ID that is going to be generated on the server.
       //* .then((res) => setUsers([res.data, ...users])); --> Restructuring

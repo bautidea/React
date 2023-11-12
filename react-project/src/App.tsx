@@ -1,5 +1,5 @@
-import axios, { AxiosError, CanceledError } from 'axios';
 import { useEffect, useState } from 'react';
+import apiClient, { CanceledError } from './services/api-client';
 
 interface User {
   id: number;
@@ -16,8 +16,8 @@ function App() {
 
     setLoading(true);
 
-    axios
-      .get<User[]>('https://jsonplaceholder.typicode.com/users', {
+    apiClient
+      .get<User[]>('/users', {
         signal: controller.signal,
       })
       .then((res) => {
@@ -40,12 +40,10 @@ function App() {
 
     setUsers(users.filter((u) => u.id !== user.id));
 
-    axios
-      .delete('https://jsonplaceholder.typicode.com/users/' + user.id)
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
+    apiClient.delete('/users/' + user.id).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
   };
 
   // Function for adding a user.
@@ -56,8 +54,8 @@ function App() {
 
     setUsers([newUser, ...users]);
 
-    axios
-      .post('https://jsonplaceholder.typicode.com/users/' + newUser)
+    apiClient
+      .post('/users', newUser)
       .then(({ data: savedUser }) => setUsers([savedUser, ...users]))
       .catch((err) => {
         setError(err.message);
@@ -72,24 +70,10 @@ function App() {
 
     setUsers(users.map((u) => (u.id === user.id ? updatedUser : u)));
 
-    // Now we have two options to call the server to save the changes.
-    // - Use 'put' method, in HTTP we use the PUT method for replacing an object
-    // - Use 'patch' method, we use the PATCH method for patching or updating one or more
-    //   of its properties.
-    // The method to choose depends on how the backend is build.
-
-    // Using patch because we are only updating one property.
-    // We need to pass the updated user in the body of the request.
-    // If the call to the server is successful there is nothing extra we want to do.
-    axios
-      .patch(
-        'https://jsonplaceholder.typicode.com/users/' + user.id,
-        updatedUser
-      )
-      .catch((err) => {
-        setError(err.message);
-        setUsers(originalUsers);
-      });
+    apiClient.patch('/users/' + user.id, updatedUser).catch((err) => {
+      setError(err.message);
+      setUsers(originalUsers);
+    });
   };
 
   return (
