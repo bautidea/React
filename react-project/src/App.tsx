@@ -1,34 +1,14 @@
 import { useEffect, useState } from 'react';
 import { CanceledError } from './services/api-client';
 import userService, { User } from './services/user-service';
+import useUsers from './hooks/useUsers';
+
+// In this component we are using a custom hook to fetch the list of users.
 
 function App() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [error, setError] = useState('');
-  const [isLoading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-
-    // Here we are calling the class, and from it we are using the crated method for getting
-    // all users. Also we are passing the type of object we are going to fetch from the server
-    // (<User>).
-    const { request, cancel } = userService.getAll<User>();
-
-    request
-      .then((res) => {
-        setUsers(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-        setError(err.message);
-        setLoading(false);
-      });
-    //* .finally(() => setLoading(false));
-
-    return cancel;
-  }, []);
+  // Here we call useUsers, this returns an object that we destructure it
+  // to grab ...
+  const { users, error, isLoading, setUsers, setError } = useUsers();
 
   // Function for deleting a user.
   const deleteUser = (user: User) => {
